@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+
+{% block titulo %} Bienvenido a RyM {% endblock %}
+
+{% block sesion %}
+    <ul class="me-auto"></ul>
+    <div class="d-flex">
+        <a href="{{ url_for('sesion_cliente') }}"><button class="btn btn-navbar" type="button">Ingresar como cliente</button></a>
+        <a href="{{ url_for('sesion_proveedor') }}"><button class="btn btn-navbar" type="button">Ingresar como proveedor</button></a>
+    </div>       
+{% endblock %}
+
+{% block cuerpo %}
+    <div class="container anuncio">
+        <!--Agreagar Anuncios-->
+    </div>
+    <div class="row">
+        <h1 class="text-center">Bienvenido a RyM</h1>
+        <div class="d-flex">
+            <img class= "logo-det" src="../static/img/Logo_3_Transparente.png" alt="Logo de RyM detallado">
+        </div>
+    </div>
+    <div>
+        <div class="row bgc-azest-1">
+            <div class="col-md text-white" style="padding: 5px;">
+                <h2 class="text-center titcolor-amaest">¿Qué es RyM?</h2>
+                <p class="text-wrap text-center padd-15px" style="color: #000000;">RyM es una aplicación web, donde se podrá encontrar y ofertar servicios de matenimiento y reparaciones de edificios.
+                    Siendo estos edificios comerciales o viviendas.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex">
+                    <img class="img-fluid img-columna"  src="../static/img/herramientas.jpg" alt="Herramientas de construcción">
+                </div>
+            </div>
+        </div>
+        <div class="row padd-20px">
+            <div class="col-md">
+                <div class="d-md-flex justify-content-center">
+                    <h2 class="titcolor-azest-1">RyM busca:</h2>
+                </div>
+                <div class="d-md-flex justify-content-center">
+                    <div class="border-amarillo rounded">
+                        <ul>
+                            <li><p class="padd-20px">Mejorar las condiciones de contratación de los servicios.</p></li>
+                            <li><p class="padd-20px">Aumentar las oportunidades de trabajo para los proveedores de servicios.</p></li>
+                            <li><p class="padd-20px">Mejorar las condiciones de contratación de los servicios.</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="clearfix">
+                        <img src="../static/img/laptop.PNG" class="col-md-6 float-md-end img-fluid" alt="Cliente en laptop">
+                        <h2>¿Buscas un servicio?</h2>
+                        <p class="card-text mb-auto">Si desea contactar con proveedores de servicios de mantenimiento y reparación de edificios haga click aquí.</p>
+                        <a href="{{ url_for('registro_cliente') }}" class="stretched-link marg-15px">Registrarse como cliente</a>
+                    </div>
+                    <!--
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <h2>¿Buscas un servicio?</h2>
+                        <p class="card-text mb-auto">Si desea contactar con proveedores de servicios de mantenimiento y reparación de edificios haga click aquí.</p>
+                        <a href="#" class="stretched-link marg-15px">Registrarse como cliente</a>
+                    </div>
+                    <div class="col d-none d-lg-block">
+                        <img src="../static/img/laptop.PNG" height="100%" width="100%" alt="Cliente en laptop">
+                    </div>
+                    -->
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="clearfix">
+                        <img src="../static/img/constructor.PNG" class="col-md-6 float-md-end img-fluid" alt="Proveedor de servicios">
+                        <h2>¿Es un proveedor de servicios?</h2>
+                        <p class="card-text mb-auto">Si desea publicar sus servicios de reparación y mantenimiento de edificios haga click aquí.</p>
+                        <a href="{{url_for('registro_proveedor')}}" class="stretched-link">Registrarse como proveedor</a>
+                    </div>
+                    <!--
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <h2>¿Es un proveedor de servicios?</h2>
+                        <p class="card-text mb-auto">Si desea publicar sus servicios de reparación y mantenimiento de edificios haga click aquí.</p>
+                        <a href="#" class="stretched-link marg-15px">Registrarse como proveedor</a>
+                    </div>
+                    <div class="col d-none d-lg-block">
+                        <img src="../static/img/constructor.PNG" height="100%" width="100%" alt="Proveedor de servicios">
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

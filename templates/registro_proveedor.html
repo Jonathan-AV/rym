@@ -1,0 +1,117 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}Crea tu cuenta de proveedor{% endblock %}
+{% block imports_extras %}
+<script src="../static/js/validacion_registroP.js"></script>
+{% endblock %}
+
+{% block mensajes_flash %}
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <p class="fs-5">{{ message }}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+{% endblock %}
+
+{% block cuerpo %}
+<form action="/registro_proveedor" id="formulario-registro" class="container-md form-registro" method="post">
+    <div class="row g-2">
+        <h3 class="titcolor-azest">Registro de información:</h3>
+        <div class="col-md">
+            <div class="form-floating mt-3">
+                <input class="form-control" name="input_nombre" type="text" placeholder="Nombre" id="f_nombre" required pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+(\s[a-zA-ZÀ-ÖØ-öø-ÿ]+)*">
+                <label for="f_nombre">Nombre (necesario)</label>
+            </div>
+            <div class="mensaje-val" id="msj-nombre-noval">No debe estar vacío y SOLO debe contener letras.</div>
+            <div class="form-floating mt-3">
+                <input class="form-control" type="text" name="input_ap_pat" placeholder="Apellido Paterno" id="f_apPaterno" required pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+">
+                <label for="f_apPaterno">Apellido Paterno (necesario)</label>
+            </div>
+            <div class="mensaje-val" id="msj-apPaterno-noval">No debe estar vacío y SOLO debe contener letras.</div>
+            <div class="form-floating mt-3">
+                <input class="form-control" type="text" name="input_ap_mat" placeholder="Apellido Materno" id="f_apMaterno" required pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+">
+                <label for="f_apMaterno">Apellido Materno (necesario)</label>
+            </div>
+            <div class="mensaje-val" id="msj-apMaterno-noval">No debe estar vacío y SOLO debe contener letras.</div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mt-3">
+                <input class="form-control" name="input_ofigiro" type="text" placeholder="Oficio o Giro de empresa" id="f_ofigiro" required>
+                <label for="f_ofigiro">Oficio o Giro de empresa (necesario)</label>
+            </div>
+            <div class="mensaje-val" id="msj-ofigiro-noval">No debe estar vacío.</div>
+            <div class="form-floating mt-3">
+                <input class="form-control" name="input_dir" type="text" placeholder="Ingrese la dirección de su empresa" id="f_direccion">
+                <label for="f_direccion">Dirección de su empresa (opcional)</label>
+            </div>
+            <div class="form-floating mt-3">
+                <input class="form-control" type="tel" name="input_tel" placeholder="Teléfono" id="f_telefono" required pattern="[0-9]{10,}">
+                <label for="f_telefono">Teléfono (necesario)</label>
+            </div>
+            <div class="mensaje-val" id="msj-telefono-noval">No debe estar vacío y SOLO debe contener 10 dígitos numéricos.</div>
+        </div>
+    </div>
+    <div class="row g-2">
+        <h3 class="titcolor-azest">Creación de cuenta:</h3>
+        <div class="form-floating mt-3">
+            <input class="form-control" name="input_correo" type="email" id="f_correo" placeholder="Correo Electrónico" required>
+            <label for="f_correo">Correo Electrónico (necesario)</label>
+        </div>
+        <div class="mensaje-val" id="msj-correo-noval">No debe estar vacío y debe respetar el formato de correo.</div>
+        <div class="form-floating mt-3">
+            <input class="form-control" name="input_contra" type="password" placeholder="Contraseña" id="f_contra" required>
+            <label for="f_contra">Contraseña (necesario)</label>
+        </div>
+        <div class="mensaje-val" id="msj-contra-noval">El campo no debe estar vacío y debe tener más de 4 dígitos.</div>
+        <div class="form-floating mt-3">
+            <input class="form-control" name="input_re_contra" type="password" placeholder="Repita su contraseña" id="f_repContra" required>
+            <label for="f_repContra">Repita su contraseña (necesario)</label>
+        </div>
+        <div class="mensaje-val" id="msj-repContra-noval">Las contraseñas deben ser iguales.</div>
+    </div>
+    <div class="row my-3">
+        <div class="form-check">
+            <input id="CheckCondicionesTerminos" required name="input_aceptar" class="form-check-input" type="checkbox" value="1" style="margin-left: .09rem; margin-right: .30rem;">
+            <label class="form-check-label" for="CheckCondicionesTerminos">Acepto los <button class="boton-link-registro" data-bs-toggle="modal" data-bs-target="#modalTerminosCondiciones">terminos y condiciones</button>.</label>
+        </div>
+    </div>
+    <div class="row py-3">
+        <button style="margin-left: auto; margin-right: auto;" class="w-75 btn btn-lg btn-estandar" type="submit">Crear cuenta</button>
+    </div>
+</form>
+
+<!-- Modal Enviar Recuperar Contraseña -->
+<div class="modal fade" id="modalTerminosCondiciones" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title titcolor-azest" id="staticBackdropLabel">
+                    Terminos y condiciones
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="my-3">
+                    <h4 class="titcolor-azest">Uso de la aplicación:</h4>
+                    <ol>
+                        <li class="my-2" style="text-align: justify;">La aplicación RyM solo se debe utilizar para contactar con los clientes y responder a sus solicitudes de servicios de reparación y mantenimiento de edificios.</li>
+                    </ol>
+                </div>
+                <div class="my-3">
+                    <h4 class="titcolor-azest">Uso de los datos recabados:</h4>
+                    <ol>
+                        <li class="my-2" style="text-align: justify;">Los datos personales (nombre), se utiliza para que la identificación del proveedor sea fácil para el cliente que solicite servicios.</li>
+                        <li class="my-2" style="text-align: justify;">Los datos de contacto solicitados (correo, teléfono, direccion de negocio), solo se les enviarán al cliente, cuando este último solicite sus datos para solicitar un servicio de manera directa con el proveedor.</li>
+                        <li class="my-2" style="text-align: justify;">El oficio o giro de la empresa solo es una manera de tener control y saber a lo que se dedica el proveedor.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

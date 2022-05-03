@@ -1,0 +1,133 @@
+{% extends 'layout.html' %}
+{% block titulo %}RyM (cliente){% endblock %}
+{% block imports_extras%} <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> {% endblock %}
+
+{% block sesion %}
+    <div class="me-auto"></div>
+    <form class="d-flex">
+        <a href="{{url_for('mensajes_cliente')}}"><button class="btn btn-navbar" type="button">Mis mensajes</button></a>
+    </form>
+    <div class="btn-group bnavbar">
+        <button type="button" class="btn btn-drops">Mi sesión</button>
+        <button type="button" class="btn btn-drops dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/modificar-informacion-c">Modificar información</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/cerrar-sesion">Cerrar sesión</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block cuerpo %}
+    <div class="row bgc-azest rowTit-Bproveedor">
+        <h2 class="titcolor-blancest text-center">Busca un proveedor:</h2>
+    </div>
+    <div class="container-lg">
+            <!--TODO: Apartado backend.
+            Insertar un ciclo for por cada tipo de servicio dentro de la BD-->
+        <div class="contenedor-buscar-prov">    
+            <div class="contenido-cards">
+                {% for servicio in servicios %}
+                    <div class="card m-2">
+                        <div class="card-body">
+                            <h3 class="card-title" style="color: #03989e;">Proveedor: <span class="titcolor-azest">{{servicio[0]}} {{servicio[1]}} {{servicio[2]}}</span></h3>
+                            <p class="card-text" style="font-size: large;">Nombre del servicio: <span style="font-weight: bold;" class="titcolor-azest"">{{servicio[3]}}</span></p>
+                            <p class="card-text" style="font-size: large;">Descripción: <span style="font-style: italic; font-weight: bold;">{{servicio[4]}} </span></p>
+                            <p class="card-text" style="font-size: large;">{% if servicio[5] == 0 %}No ha sido calificado...{% else %}Calificación: <span style="font-style: italic; font-weight: bold;">{{servicio[5]}}</span>{% endif %}</p>
+                            <form action="/proveedor" method="post">
+                                <input name="input_id_servicio" type="hidden" value="{{servicio[6]}}">
+                                <input name="input_nom_servicio" type="hidden" value="{{servicio[3]}}">
+                                <button type="submit" class="btn btn-estandar">Ver proveedor</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row rowPagi-Bproveedor">
+                <nav aria-label="Navegacion de paginas">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item previous-page disabled"><a class="page-link" href="#">Anterior</a></li>
+                        <li class="page-item next-page"><a class="page-link" href="#">Siguiente</a></li>
+                    </ul>
+                </nav>  
+            </div>  
+        </div>
+
+    </div>    
+
+    <script type="text/javascript">
+        function getPageList(totalPages, page, maxLenght){
+            function range(start, end){
+                return Array.from(Array(end - start + 1), (_,i) => i + start);
+            }
+    
+            let sideWidth = maxLenght < 9 ? 1 : 2;
+            let leftWidth = (maxLenght - sideWidth * 2 - 3) >> 1;
+            let rightWidth = (maxLenght - sideWidth * 2 - 3) >> 1;
+    
+            if (totalPages <= maxLenght){
+                return range(1, totalPages);
+            }
+    
+            if(page <= maxLenght - sideWidth - 1 - rightWidth){
+                return range(1, maxLenght - sideWidth - 1).concat(0, range(totalPages - sideWidth + 1, totalPages));
+            }
+    
+            if(page >= totalPages - sideWidth - 1 - rightWidth){
+                return range(1, sideWidth).concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
+            }
+    
+            return range(1, sideWidth).concat(0, range(page - leftWidth, page + rightWidth),0,range(totalPages - sideWidth + 1, totalPages));
+        }
+    
+        $(function(){
+            let numberOfItems = $(".contenido-cards .card").length;
+            let limitPerPage = 4; //Cuantas cards visibles por página
+            let totalPages = Math.ceil(numberOfItems / limitPerPage);
+            let paginationSize = 5; //Cuantos elementos de página visibles en el pagination
+            let currentPage;
+    
+            function showPage(whichPage){
+                if(whichPage < 1 || whichPage > totalPages) return false;
+    
+                currentPage = whichPage;
+    
+                $(".contenido-cards .card").hide().slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage).show();
+    
+                $(".pagination li").slice(1, -1).remove();
+    
+                getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+                    $("<li>").addClass("page-item").addClass(item ? "current-page" : "dots")
+                        .toggleClass("active", item === currentPage).append($("<a>").addClass("page-link")
+                            .attr({href: "javascript:void(0)"}).text(item || "...")).insertBefore(".next-page");
+                });
+    
+                $(".previous-page").toggleClass("disabled", currentPage === 1);
+                $(".next-page").toggleClass("disabled", currentPage === totalPages);
+                return true;
+            }
+    
+            $(".pagination").append(
+                $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link").attr({href: "javascript:void(0)"}).text("Anterior")),
+                    $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("page-link").attr({href: "javascript:void(0)"}).text("Siguiente"))
+            );
+    
+            $(".contenido-cards").show();
+            showPage(1);
+    
+            $(document).on("click", ".pagination li.current-page:not(.active)", function(){
+                return showPage(+$(this).text());
+            });
+    
+            $(".next-page").on("click", function(){
+                return showPage(currentPage + 1);
+            });
+    
+            $(".previous-page").on("click", function(){
+                return showPage(currentPage - 1);
+            });
+        });
+    </script>
+{% endblock %}

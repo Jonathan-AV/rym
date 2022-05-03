@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}Inicio de sesión cliente{% endblock %}
+
+{% block mensajes_flash %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category,message in messages %}
+            {% if category == 'usuario-incorrecto' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p class="fs-5">{{ message }}</p>
+                <p class="fs-5">En caso de no recordar su contraseña de clic:
+                    <button class="boton-link" data-bs-toggle="modal" data-bs-target="#modalRecuperarContra">aquí</button></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% if category == 'contra-recuperada' %}
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <p class="fs-5">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+{% endblock %}
+
+{% block cuerpo %}
+<form class="form-sesion" action="/sesion_proveedor" method="post">
+    <img class="img-sesion" src="../static/img/Logo_3_Transparente.png" alt="Logo RyM">
+    <div class="form-floating input-sesion">
+        <input class="form-control" name="input_correo" id="f_correo_r" type="email" placeholder="Correo Electrónico" required>
+        <label for="f_correo_r">Correo Electrónico</label>
+    </div>
+    <div class="form-floating input-sesion">
+        <input class="form-control" name="input_contra" id="f_contraseña_r" type="password" placeholder="Contraseña" required>
+        <label for="f_contraseña_r">Contraseña</label>
+    </div>
+    <div class="row">
+        <a href="{{url_for('registro_proveedor')}}" class="mb-3" style="text-align: left;">Registrarse como proveedor</a>
+    </div>
+    <button class=".w-100 btn btn-lg btn-estandar" type="submit">Iniciar sesión</button>
+</form>
+
+<!-- Modal Enviar Recuperar Contraseña -->
+<div class="modal fade" id="modalRecuperarContra" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                    Recupere su contraseña
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/recordar-contra-p" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fm_asunto">Ingrese su correo:</label>
+                        <input required class="form-control" name="input_correo" type="email" autocomplete="off" placeholder="Escriba su correo...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-estandar2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-estandar">Recuperar contraseña</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

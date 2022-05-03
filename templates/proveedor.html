@@ -1,0 +1,191 @@
+{% extends 'layout.html' %}
+{% block titulo %}RyM (cliente){% endblock %}
+{% block imports_extras%}
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+<script src="../static/js/starrr.js"></script>
+<link rel="stylesheet" href="../static/starrr.css">
+<script src="../static/js/validacion_cali.js"></script>
+{%endblock%}
+
+{% block sesion %}
+    <div class="me-auto"></div>
+    <form class="d-flex">
+        <a href="{{url_for('mensajes_cliente')}}"><button class="btn btn-navbar" type="button">Mis mensajes</button></a>
+    </form>
+    <div class="btn-group bnavbar">
+        <button type="button" class="btn btn-drops">Mi sesión</button>
+        <button type="button" class="btn btn-drops dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/modificar-informacion-c">Modificar información</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{url_for('cerrar_sesion')}}">Cerrar sesión</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block cuerpo %}
+<div class="row bgc-azest rowTit-proveedor">
+    <h2 class="text-center" style="color: #FFFFFF;">Proveedor: <span class="titcolor-blancest"> {{proveedor[0]}} {{proveedor[1]}} {{proveedor[2]}} </span></h2>
+    <h2 class="text-center" style="color: #FFFFFF;">Servicio: <span class="titcolor-blancest">{{nomServicio}}</span></h2>
+</div>
+<div class="row">
+    {% if imgs %}
+        <div id="carouselControls" class="carousel slide" style="background-color: #d9d9d9;" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for img in imgs%}
+                    {% if img == imgs[0] %}
+                        <div class="carousel-item active">
+                            <img src="{{img[0]}}" class="d-block w-75 mx-auto" alt="">
+                        </div>
+                    {% else %}
+                        <div class="carousel-item">
+                            <img src="{{img[0]}}" class="d-block w-75 m-auto" alt="">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    {% else %}
+        <div class="contenedor-sin-imgs-en-proveedor">
+            <h3 class="text-center">El proveedor no tiene imagenes de su servicio.</h3>
+        </div>
+    {% endif %}
+</div>
+<div class="row bgc-azest rowB-proveedor">
+    <div class="col">
+        <form action="{{url_for('solicitud_dat_contacto')}}">
+            <input type="hidden" name="input_id_servicio" value="{{idServicio}}">
+            <button type="submit" class="btn btn-estandar w-100 h-100">Solicitar datos de contacto</button>
+        </form>
+    </div>
+    <div class="col">
+        <form action="/chat" method="post">
+            <input type="hidden" name="input_id_proveedor" value="{{id_proveedor}}">
+            <button type="submit" class="btn btn-estandar w-100 h-100">Enviar mensaje</button>
+        </form>
+    </div>
+    <div class="col">
+        <button class="btn btn-estandar w-100 h-100" type="button" data-bs-toggle="modal" data-bs-target="#modalEnviarMSJ">Solicitar servicio</button>
+    </div>
+    <div class="col">
+        <button class="btn btn-estandar w-100 h-100" type="button" data-bs-toggle="modal" data-bs-target="#modalCalificar">Calificar proveedor</button>
+    </div>
+</div>
+<form class="row rowComent-proveedor" action="/registrar-comentario" method="post">
+    <div class="col-1"></div>
+    <div class="col-md-8">
+        <div class="form-floating justify-content-center">
+            <textarea required style="height: auto; min-height: 80px; max-height: 100px; resize: none;" class="form-control" placeholder="Escribe tu comentario" name="input_comentario" id="f_txtA_comentario"></textarea>
+            <label for="f_txtA_comentario">Escribe tu comentario...</label>
+        </div>
+    </div>
+    <input type="hidden" name="input_id_servicio" value="{{idServicio}}">
+    <div class="col-md-2">
+        <button class="btn btn-estandar2" type="submit">Comentar</button>
+    </div>
+</form>
+<div class="contenedor-comentarios my-3">
+    {% if comentarios %}
+        <p class="fs-5">Comentarios:</p>
+        {% for comentario in comentarios %}
+            <div class="comentarios">
+                <div class="card my-2 mx-auto contenedor-comentario">
+                    <div class="row g-0">
+                        <div class="col-md-2 justify-content-center" style="background-color: transparent;">
+                            <div class="contenedor-img-coment">
+                                <img src="{% if comentario[5] %}{{comentario[5]}}{% else %}../static/img/img_perfil_defecto.png{% endif %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-md-10 column-coment">
+                            <div class="card-body">
+                                <h4 class="card-title" style="color: #FFFFFF;">Cliente: <span style="text-decoration: underline;">{{comentario[2]}} {{comentario[3]}} {{comentario[4]}}</span></h4>
+                                <p class="card-text fs-5" style="color: #FFFFFF;">{{comentario[0]}}</p>
+                                <p class="card-text fs-6"><small>{{comentario[1].strftime("%d %b %Y - %H:%M:%S")}}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}    
+        <div class="contenedor-sin-comentarios">
+            <h3 class="text-center">El servicio no tiene comentarios</h3>
+        </div>
+    {% endif %}
+</div>
+<!-- Modal Enviar solicitud -->
+<div class="modal fade" id="modalEnviarMSJ" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                    Solicitud de servicio
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/solicitar-servicio" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fm_asunto">Asunto:</label>
+                        <input required class="form-control" name="input_asunto" type="text" autocomplete="off" placeholder="Escriba el asunto...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fm_solicitud">Solicitud:</label>
+                        <textarea required class="form-control" name="input_solicitud" placeholder="Escriba su solicitud..." autocomplete="off" name="" id="fm_solicitud"></textarea>
+                    </div>
+                    <input type="hidden" name="input_id_servicio" value="{{idServicio}}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-estandar2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-estandar">Enviar solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Calificar Servicio -->
+<div class="modal fade" id="modalCalificar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title titcolor-azest" id="staticBackdropLabel2">Calificar proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="color: #04686b;">Seleccione la calificación a dar:</p>
+                <div class='starrr mx-auto' id="estrellas"></div>
+            </div>
+            <div class="modal-footer">
+                <form action="/calificar-servicio" id="form_calif" method="post">
+                    <input type="hidden" name="input_califi" id="f_cali">
+                    <input type="hidden" name="input_id_servicio" value="{{idServicio}}">
+                    <button type="button" class="btn btn-estandar2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-estandar">Calificar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Script del Modal de estrellas -->
+<script>
+    $('#estrellas').starrr()
+    $('.starrr:eq(0)').on('starrr:change',function(e, value){
+        if(value) {
+            $("#f_cali").val(value)
+        }
+    })
+</script>
+<!--TODO: Mostrar los comentarios guardados en la BD -->
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'layout.html' %}
+{% block titulo %}RyM chat{% endblock %}
+
+{% block sesion %}
+    <div class="me-auto"></div>
+    <form class="d-flex">
+        <a href="{% if mensajesD_p %} {{url_for('mensajes_proveedor')}} {% elif mensajesD_c %} {{url_for('mensajes_cliente')}} {% endif %}"><button class="btn btn-navbar" type="button">Mis mensajes</button></a>
+    </form>
+    <div class="btn-group bnavbar">
+        <button type="button" class="btn btn-drops">Mi sesión</button>
+        <button type="button" class="btn btn-drops dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% if mensajesD_p %}{{url_for('modificar_info_p')}}{% elif mensajesD_c %}{{url_for('modificar_info_c')}}{% endif %}">Modificar información</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/cerrar-sesion">Cerrar sesión</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block cuerpo %}
+    <div class="container-fluid mt-4">
+        <div class="container-sm contenedor-mensajes" id="mensajes">
+            {% if mensajes %}
+                {% for mensaje in mensajes %}
+                    {% if mensaje == mensajes[-1] %}
+                        {% if mensaje[2] == id_usuario %}
+                            <div id="ultimo-mensaje" class="align-items-baseline mb-4 text-end justify-content-end ultimo-mensaje">
+                                <div class="card ch-bgc-1 d-inline-block p-2 px-3 m-1">
+                                    <p class="txt-chat fs-5">{{mensaje[0]}}</p>
+                                    <p class="fecha-chat fs-6">{{mensaje[1].strftime("%d/%m/%Y - %H:%M:%S")}}</p> 
+                                </div>
+                            </div>
+                        {% else %}
+                            <div id="ultimo-mensaje" class="d-flex align-items-baseline mb-4 ultimo-mensaje">
+                                <div class="card ch-bgc-2 d-inline-block p-2 px-3 m-1">
+                                    <p class="txt-chat fs-5">{{mensaje[0]}}</p>
+                                    <p class="fecha-chat fs-6">{{mensaje[1].strftime("%d/%m/%Y - %H:%M:%S")}}</p> 
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {% if mensaje[2] == id_usuario %}
+                            <div class="align-items-baseline mb-4 text-end justify-content-end">
+                                <div class="card ch-bgc-1 d-inline-block p-2 px-3 m-1">
+                                    <p class="txt-chat fs-5">{{mensaje[0]}}</p>
+                                    <p class="fecha-chat fs-6">{{mensaje[1].strftime("%d/%m/%Y - %H:%M:%S")}}</p> 
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="d-flex align-items-baseline mb-4">
+                                <div class="card ch-bgc-2 d-inline-block p-2 px-3 m-1">
+                                    <p class="txt-chat fs-5">{{mensaje[0]}}</p>
+                                    <p class="fecha-chat fs-6">{{mensaje[1].strftime("%d/%m/%Y - %H:%M:%S")}}</p> 
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="row rowInput-c bgc-azest" id="input_area" class="bgc-azest">
+        <form class="row" action="" id="form_enviar_msj">
+            <div class="col-1"></div>
+            <div class="col-md-7">
+                <textarea class="form-control" autocomplete="off" name="" id="input_mensaje" placeholder="Escribe tu mensaje"></textarea>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-estandar2 w-100 h-100" type="submit" id="b_enviar_msj">Enviar mensaje</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+        let usuario_actual, usuario_otro
+        const socket = io.connect("http://127.0.0.1:5000")
+        socket.on('connect', function(){
+            usuario_actual = "{{id_usuario}}"
+            usuario_otro = "{{id_otro}}"
+            socket.emit('join_room', {
+                username: "{{id_usuario}}",
+                room: "{{id_conversacion}}",
+                otro: "{{id_otro}}"
+            })
+
+            let mensaje_input = document.getElementById('input_mensaje')
+            document.getElementById('form_enviar_msj').onsubmit = function (e){
+                e.preventDefault()
+                let mensaje = mensaje_input.value.trim()
+                if(mensaje.length) {
+                    socket.emit('enviar_mensaje', {
+                        username: "{{id_usuario}}",
+                        room: "{{id_conversacion}}",
+                        mensaje: mensaje,
+                        otro: "{{id_otro}}"
+                    })
+                }
+                mensaje_input.value = ''
+                mensaje_input.focus()
+            }
+        })
+
+        socket.on('recibir_mensaje', function(data){
+            // let usuario_actual = "{{id_usuario}}"
+            // let usuario_otro = "{{id_otro}}"
+            if (data.username == usuario_actual){
+                let newNode = document.createElement('div')
+                let newNode2 = document.createElement('div')
+                let etiMensaje = document.createElement('p')
+                let etiFecha = document.createElement('p')
+
+                newNode.classList.add('align-items-baseline','mb-4','text-end','justify-content-end')
+                newNode2.classList.add('card','ch-bgc-1','d-inline-block','p-2','px-3','m-1')
+                etiMensaje.classList.add('txt-chat','fs-5')
+                etiFecha.classList.add('fecha-chat','fs-6')
+
+                etiMensaje.innerHTML = `${data.mensaje}`
+                etiFecha.innerHTML = `${data.fecha}`
+
+                newNode2.appendChild(etiMensaje)
+                newNode2.appendChild(etiFecha)
+                newNode.appendChild(newNode2)
+                document.getElementById('mensajes').appendChild(newNode)
+
+            } else {
+                let newNode = document.createElement('div')
+                let newNode2 = document.createElement('div')
+                let etiMensaje = document.createElement('p')
+                let etiFecha = document.createElement('p')
+
+                newNode.classList.add('align-items-baseline','mb-4')
+                newNode2.classList.add('card','ch-bgc-2','d-inline-block','p-2','px-3','m-1')
+                etiMensaje.classList.add('txt-chat','fs-5')
+                etiFecha.classList.add('fecha-chat','fs-6')
+
+                etiMensaje.innerHTML = `${data.mensaje}`
+                etiFecha.innerHTML = `${data.fecha}`
+
+                newNode2.appendChild(etiMensaje)
+                newNode2.appendChild(etiFecha)
+                newNode.appendChild(newNode2)
+                document.getElementById('mensajes').appendChild(newNode)
+            }
+        })
+
+        window.onload = function () {
+            window.location.hash = '#ultimo-mensaje'
+        }
+    </script>
+{% endblock %}

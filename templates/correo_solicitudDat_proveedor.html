@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container-sm">
+        <div class="bgc-azest" style="background-color: #03989e; text-align: center;">
+            <h3 class="text-center" style="color: #FFFFFF;">Ha solicitado los datos de contacto del proveedor: </h3>
+            <h4 class="text-center" style="color: #FFFFFF; text-decoration: underline;">{{info[0]}} {{info[1]}} {{info[2]}}</h4>
+        </div>
+        <div class="row">
+            <h4 style="text-align: center;"">Su servicio es: {{info[6]}}</h4>
+        </div>
+        <div style="border: 2px solid #b2adad;">
+            <p style="font-weight: bold;">Telefono: <span>{{info[3]}}</span> </p>
+        </div>
+        <div class="row">
+            <div class="col" style="border: 2px solid #b2adad; background-color: #d9d9d9;">
+                <p style="font-weight: bold;">Correo: {{info[4]}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="border: 2px solid #b2adad;">
+                <p style="font-weight: bold;">Direcció de negocio: {% if info[5] %}{{info[5]}}{% else %} No tiene la dirección de su negocio registrada. {% endif %}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+{% block titulo %} RyM (proveedor) {% endblock %}
+{% block imports_extras%} <script src="../static/js/validacion_reg_servi.js"></script> {%endblock%}
+
+{% block mensajes_flash %}
+    {% with messages = get_flashed_messages(category_filter=["servicio-registrado"]) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+{% endblock %}
+
+{% block sesion %}
+<div class="me-auto"></div>
+<div class="d-flex">
+    <div class="btn-group bnavbar">
+        <button type="button" class="btn btn-drops">Mi sesión</button>
+        <button type="button" class="btn btn-drops dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{url_for('modificar_info_p')}}">Modificar información</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{url_for('cerrar_sesion')}}">Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block cuerpo%}
+<form id="formulario-reg-servicio" class="container-lg form-reg-servicio" action="/registrar-servicio" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <h3 class="titcolor-azest">Registre su servicio:</h3>
+        <div class="my-3 form-floating">
+            <input class="form-control" name="input_nom" type="text" placeholder="Nombre del servicio" id="f_nom_serv" required>
+            <label for="f_nom_serv">Nombre del servicio</label>
+        </div>
+        <div class="mensaje-val" id="msj-nom-noval">El campo no debe estar vacío y NO debe contener números.</div>
+        
+        <label class="mb-1 titcolor-azest" for="contenedor-radio-btns">En que clasificación entra su servicio:</label>
+        <div id="contenedor-radio-btns" class="row cont-radio-btns">
+            <div class="col-md">
+                <div class="my-2">
+                    <input class="form-check-input" id="radio_1" type="radio" value="Servicios de acabados" name="radio_opcion">
+                    <label class="form-check-label" for="radio_1">Servicio de acabados</label>
+                </div>
+                <div class="my-2">
+                    <input class="form-check-input" id="radio_3" type="radio" value="Servicios de plomería" name="radio_opcion">
+                    <label class="form-check-label" for="radio_3">Servicio de plomería</label>
+                </div>
+                <div class="my-2">
+                    <input class="form-check-input" id="radio_5" type="radio" value="Servicios de ferretería" name="radio_opcion">
+                    <label class="form-check-label" for="radio_5">Servicio de ferretería</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="my-2">
+                    <input class="form-check-input" id="radio_2" type="radio" value="Servicios de albañilería" name="radio_opcion">
+                    <label class="form-check-label" for="radio_2">Servicio de albañilería</label>
+                </div>
+                <div class="my-2">
+                    <input class="form-check-input" id="radio_4" type="radio" value="Servicios sobre instalaciones eléctricas" name="radio_opcion">
+                    <label class="form-check-label" for="radio_4">Servicio sobre instalacion eléctrica</label>
+                </div>
+                <div class="my-2">
+                    <input class="form-check-input" id="radio_6" type="radio" value="Servicios de carpintería" name="radio_opcion">
+                    <label class="form-check-label" for="radio_6">Servicio de carpintería</label>
+                </div>
+            </div>
+        </div>
+        <div class="mensaje-val" id="msj-radios-noval">Debe seleccionar una clasificación.</div>
+        
+        <div class="my-3">
+            <label for="f_desc_serv">Descripción del servicio:</label>
+            <textarea class="form-control" placeholder="Escriba la descripción..." autocomplete="off" name="input_desc" id="f_desc_serv" required></textarea>
+        </div>
+        <div class="mensaje-val" id="msj-desc-noval">El campo no debe estar vacío y NO debe contener números.</div>
+        <div class="my-3">
+            <label for="f_img_serv" class="form-label titcolor-azest">Suba algunas fotos de su servicio:</label>
+            <div style="font-size: small;">*Se requiere de al menos una foto</div>
+            <input class="form-control" name="input_imgs" type="file" accept="image/*" id="f_img_serv" multiple min="1" required>
+        </div>
+    </div>
+    <div class="row py-3">
+        <div class="col-md">
+            <a class="mx-2 py-1" type="button" href="{{url_for('inicio_proveedor')}}">
+                <button type="button" class="btn btn-estandar2">Regresar</button>
+            </a>
+            <button class="btn btn-estandar mx-2 py-1" type="submit">Registrar servicio</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block titulo %}RyM (cliente){% endblock %}
+
+{% block sesion %}
+    <div class="me-auto"></div>
+    <form class="d-flex">
+        <a href="{{url_for('mensajes_cliente')}}"><button class="btn btn-navbar" type="button">Mis mensajes</button></a>
+    </form>
+    <div class="btn-group bnavbar">
+        <button type="button" class="btn btn-drops">Mi sesión</button>
+        <button type="button" class="btn btn-drops dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{url_for('modificar_info_c')}}">Modificar información</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{url_for('cerrar_sesion')}}">Cerrar sesión</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block cuerpo %}
+<div class="container-lg contenedor-conver">
+    <!--SI SE TIENE MENSAJES-->
+    {% if conversaciones %}
+        {% for conversacion in conversaciones %}
+            <div class="card w-100 my-2 card-mensajes">
+                <div class="card-body">
+                    <a class="card-link" href="/chat/{{conversacion[1]}}">
+                        <h3 class="card-title titcolor-blancest">Proveedor: {{conversacion[2]}} {{conversacion[3]}} {{conversacion[4]}}</h3>
+                        <p class="card-text card-t">Ultimo mensaje: {% if conversacion[5] %}{{conversacion[5]}}{% else %} --- {% endif %}</p>
+                        <p class="card-text text-end"><small class="titcolor-blancest">Fecha del último mensaje: {% if conversacion[6] %}{{conversacion[6]}}{% else %} --- {% endif %}</small></p>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <!--SI NO SE TIENE MENSAJES-->
+        <div class="contenedor-sin-mensajes">
+            <h1 class="titcolor-azest text-center">No tiene mensajes...</h1>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

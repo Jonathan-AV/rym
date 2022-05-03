@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+{% block titulo %}RyM (proveedor){% endblock %}
+{% block imports_extras%} <script src="../static/js/validacion_modificacionP.js"></script> {%endblock%}
+
+{% block sesion %}
+<div class="me-auto"></div>
+<div class="d-flex">
+    <div class="btn-group bnavbar">
+        <button type="button" class="btn btn-drops">Mi sesión</button>
+        <button type="button" class="btn btn-drops dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item disabled" href="#">Modificar información</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{url_for('cerrar_sesion')}}">Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block cuerpo %}
+<div id="formulario-modificacion" class="container-lg form-modificacion">
+    <form action="/modificar-info-personal-p" id="form-modi-info-personal" class="row g-2" method="post">
+        <h3 class="titcolor-azest">Modificar información personal:</h3>
+        <div class="col-md">
+            <div class="form-floating">
+                <input class="form-control" name="input_nombre" type="text" placeholder="Nombre" id="f_nombre" value="{{ nombre }}" required pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+(\s[a-zA-ZÀ-ÖØ-öø-ÿ]+)*">
+                <label for="f_nombre">Nombre</label>
+            </div>
+            <div class="mensaje-val" id="msj-nombre-noval">No debe estar vacío y SOLO debe contener letras.</div>
+            <div class="form-floating">
+                <input class="form-control" type="text" name="input_ap_pat" placeholder="Apellido Paterno" value="{{ apPaterno }}" id="f_apPaterno" required pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+">
+                <label for="f_apPaterno">Apellido Paterno</label>
+            </div>
+            <div class="mensaje-val" id="msj-apPaterno-noval">No debe estar vacío y SOLO debe contener letras.</div>
+            <div class="form-floating">
+                <input class="form-control" type="text" name="input_ap_mat" placeholder="Apellido Materno" value="{{ apMaterno }}" id="f_apMaterno" required pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+">
+                <label for="f_apMaterno">Apellido Materno</label>
+            </div>
+            <div class="mensaje-val" id="msj-apMaterno-noval">No debe estar vacío y SOLO debe contener letras.</div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <input class="form-control" name="input_ofigiro" value="{{ ofigiro }}" type="text" placeholder="Oficio o Giro de empresa" id="f_ofigiro" required>
+                <label for="f_ofigiro">Oficio o Giro de empresa</label>
+            </div>
+            <div class="mensaje-val" id="msj-ofigiro-noval">No debe estar vacío.</div>
+            <div class="form-floating">
+                <input class="form-control" name="input_dir" type="text" value="{% if direc == None %}{% else %} {{ direc }} {% endif %}" placeholder="Ingrese la dirección de su empresa" id="f_direccion">
+                <label for="f_direccion">Dirección de su empresa</label>
+            </div>
+            <div class="form-floating">
+                <input class="form-control" type="tel" name="input_tel" value="{{ telefono }}" placeholder="Teléfono" id="f_telefono" required pattern="[0-9]{10,}">
+                <label for="f_telefono">Teléfono</label>
+            </div>
+            <div class="mensaje-val" id="msj-telefono-noval">No debe estar vacío y SOLO debe contener 10 dígitos numéricos.</div>
+        </div>
+        
+        <div class="row py-2">
+            <div class="col-md">
+                <button class="btn btn-estandar" type="submit">Modificar información personal</button>
+                <div class="mensaje-val" id="msj-form1">Debe modificar los datos deseados y validar que todos los campos estén correctos.</div>
+            </div>
+        </div>
+    </form>
+
+    <form id="form-modi-contra-p" class="row g-2" action="/modificar-info-cuenta-p" method="post">
+        <h3 class="titcolor-azest">Modificar información de cuenta:</h3>
+        <div class="col-md">
+            <div class="form-floating">
+                <input class="form-control" name="input_contra" type="password" placeholder="Contraseña" id="f_contra" >
+                <label for="f_contra">Contraseña Nueva</label>
+            </div>
+            <div class="mensaje-val" id="msj-contra-noval">El campo no debe estar vacío y debe tener más de 4 dígitos.</div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <input class="form-control" name="input_re_contra" type="password" placeholder="Repita su contraseña" id="f_repContra" >
+                <label for="f_repContra">Repita su nueva contraseña</label>
+            </div>
+            <div class="mensaje-val" id="msj-repContra-noval">Las contraseñas deben ser iguales.</div>
+        </div>
+
+        <div class="row py-3 justify-content-end">
+            <div class="col-md">
+                <button type="submit" class="btn btn-estandar mx-2">Modificar contraseña</button>
+                <div class="mensaje-val" id="msj-form2">Antes debe llenar los campos y estos deben ser validos.</div>
+            </div>
+        </div>
+    </form>
+    
+    <div class="row my-2">
+        <div class="col-md text-center">
+            <a href="{{url_for('inicio_proveedor')}}"><button class="btn btn-estandar2">Regresar a la página principal</button></a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
