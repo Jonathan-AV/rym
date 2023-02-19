@@ -1,5 +1,7 @@
-# rym
-Aplicación de Reparación y Mantenimiento de edificios.
+# RyM
+(EN) Bulding Repair and Maintenance Application
+(ES) Aplicación de Reparación y Mantenimiento de edificios.
+(FR) Application de Réparation et Maintenance des bâtiments.
 
 ### ENGLISH (Inglés/Anglais) ###
 RyM is a web application made to approve an university subject. The objective of this project was to help the constructing
