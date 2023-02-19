@@ -25,6 +25,6 @@ RyM est une application web réalisé pour reussir une matière universitaire. L
 communauté de l'entreprise de construction en partagant leur travaille et leur information professionnel (l'email de leur
 travaile, leur numéro, etc.) aux client potentiels.
 
-RyM a été réalicé sur le <<framework>> Flask, en utilisant quelque de leur extensions et quelques extensions de Python.
+RyM a été réalicé sur le framework Flask, en utilisant quelque de leur extensions et quelques extensions de Python.
 
 Finalement, elle a été mis en ligne dans pythonanywhere pour être teste.
